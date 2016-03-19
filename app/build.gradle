@@ -1,0 +1,45 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    // 如果编译的时候出现OutOfMemory，添加以下配置
+    dexOptions {
+        incremental true
+        javaMaxHeapSize "4g"
+    }
+
+    defaultConfig {
+        applicationId "com.nstd.android"
+        minSdkVersion 19
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        debug {
+            // 如果因为加了stetho导致DexIndexOverflowException，需要添加以下配置
+            multiDexEnabled true
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+
+
+    // 只在debug版中加入stetho
+    debugCompile 'com.facebook.stetho:stetho:1.3.1'
+    debugCompile 'com.facebook.stetho:stetho-js-rhino:1.3.1'
+    //debugCompile 'com.facebook.stetho:stetho-urlconnection:1.3.1'
+
+    // 如果因为加了stetho导致DexIndexOverflowException，需要添加以下配置
+    debugCompile 'com.android.support:multidex:1.0.1'
+}
